@@ -1,0 +1,3 @@
+[submodule "gravity-sync"]
+	path = gravity-sync
+	url = https://github.com/vmstan/gravity-sync.git
