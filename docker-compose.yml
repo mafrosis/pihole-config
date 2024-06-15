@@ -2,6 +2,10 @@
 volumes:
   pihole-ftl: {}
 
+networks:
+  caddy:
+    external: true
+
 services:
   pihole:
     container_name: pihole
@@ -11,14 +15,14 @@ services:
     # https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     cap_add:
       - NET_ADMIN
+    networks:
+      - default
+      - caddy
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - 67:67/udp
-      - 80:80/tcp
-      - 443:443/tcp
     environment:
-      - ServerIP=192.168.1.198
+      - FTLCONF_LOCAL_IPV4=192.168.1.198
       - TZ=Australia/Melbourne
       - DNS1=1.1.1.1
       - DNS2=1.0.0.1
@@ -28,3 +32,8 @@ services:
       - pihole-ftl:/etc/ftldb
     env_file:
       - .secrets
+    labels:
+      caddy: pihole.mafro.net
+      caddy.tls.ca: https://ca.mafro.net:4433/acme/acme/directory
+      caddy.tls.ca_root: /root/step_ca.crt
+      caddy.reverse_proxy: "{{upstreams 80}}"
