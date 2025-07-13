@@ -1,6 +1,8 @@
 ---
 volumes:
-  pihole-ftl: {}
+  pihole-ftl:
+    labels:
+      net.mafro.kopia: true
 
 networks:
   caddy:
